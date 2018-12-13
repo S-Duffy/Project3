@@ -1,0 +1,33 @@
+Project 3 Questions
+
+Part 1:
+No Questions.
+
+Part 2:
+What is the behavior of the system when no input signal is applied?
+Even when no signal is applied, the ADC will continue generating samples and the DMA will continue moving the data,
+so the application will continue to run, but the data will just just be noise determined by the environment.
+[DMA portion of this answer only applicable in later parts of the project, this part of the project did not include
+DMA setup].
+
+Part 3:
+What source and destination DMA read and write size did you choose and why?
+I selected 16-bit reads and writes for the DMA because the ADC contains 16 bits. Using more than 16 bits would be less effecient for RAM use and
+using fewer than 16 bits would reduce the precision of the application. Any type promotions needed for the computations done with the data from
+the ADC can be done after the data is read from the buffer.
+
+Part 4: 
+What is the consequence of a lengthy or delayed interrupt service for the data retrieved by the DMA controller?
+If the interrupt service routine that responds to the filling of DMA destination buffer is delayed, it is possible that the older data in the 
+buffer will be overwritten by the newly collected data because of the modulo increment of the destination buffer write address.
+
+Part 5:
+What effect does changing the buffer size have on system processing efficiency?
+Increasing the buffer size increases the processing effeciency because the device will have to compute the decay function and update the peak
+less frequently. It will also reduce the number of interrupts that will need to be serviced and will also reduce the number of times the MCU
+will need to "wake up" if it is put into a sleep mode while awaiting interrupts from the DMA controller.
+
+What other effect(s) does changing the buffer size have on the system?
+Increasing the buffer size will naturally slow down the decay of the peak because it increases the interval. Increasing the buffer size also
+increases the memory consumption of the application. Increasing the buffer size also increases the importance that the processing be at least close
+to as fast as the DMA collection so that data is not loss (because there is more time for DMA to "get ahead" of the processing).
